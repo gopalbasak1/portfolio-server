@@ -4,7 +4,7 @@ The goal of this project is to develop a backend for a portfolio with blogging p
 
 ## 🌍 Live Deployment Link
 
-[Portfolio-Server](https://blog-project-lilac.vercel.app/)
+[Portfolio-Server](https://portfolio-backend-jet-two.vercel.app/)
 
 ## 🚀 Features
 
