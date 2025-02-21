@@ -8,8 +8,16 @@ import notFound from './app/middleware/notFound';
 const app: Application = express();
 
 app.use(express.json());
-app.use(cors());
 app.use(cookieParser());
+
+// Parse CORS origins from .env
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
+app.use(
+  cors({
+    origin: allowedOrigins, // Dynamically use environment variable
+    credentials: true,
+  }),
+);
 
 app.use('/api', router);
 

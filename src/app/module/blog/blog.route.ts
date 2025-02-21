@@ -8,7 +8,7 @@ import { BlogControllers } from './blog.controller';
 const router = express.Router();
 
 router.post(
-  '/createBlog',
+  '/create-blog',
   auth(USER_ROLE.user, USER_ROLE.admin),
   validationRequest(BlogValidation.createBlog),
   BlogControllers.createBlog,

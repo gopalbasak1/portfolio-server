@@ -8,7 +8,7 @@ import { USER_ROLE } from '../user/user.constant';
 const router = express.Router();
 
 router.post(
-  '/createProject',
+  '/create-project',
   auth(USER_ROLE.user, USER_ROLE.admin),
   validationRequest(ProjectValidation.createProject),
   ProjectControllers.createProject,
