@@ -7,6 +7,21 @@ const projectSchema = new Schema<TProject>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    category: {
+      type: String,
+      enum: ['Frontend', 'Backend', 'Mern-Stack', 'Full-stack', 'Mobile-App'],
+      required: true,
+    },
+    stack: [
+      {
+        name: {
+          type: String,
+        },
+      },
+    ],
+    github: {
+      type: String,
+    },
     title: {
       type: String,
       required: true,

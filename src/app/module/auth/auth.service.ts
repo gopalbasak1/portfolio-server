@@ -64,11 +64,21 @@ const loginIntoDB = async (payload: TLoginUser) => {
     config.JWT_REFRESH_SECRET as string,
     config.JWT_REFRESH_EXPIRES_IN as string,
   );
-
-  return {
+  const userInfo = {
+    name: user?.name,
+    email: user?.email,
+    image: user?.image,
+    role: user?.role,
+    id: user?._id,
+  };
+  console.log(userInfo);
+  const result = {
     accessToken,
     refreshToken,
+    userInfo,
   };
+  //console.log(result);
+  return result;
 };
 
 const refreshToken = async (token: string) => {

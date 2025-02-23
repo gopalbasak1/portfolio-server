@@ -60,19 +60,23 @@ The goal of this project is to develop a backend for a portfolio with blogging p
 
 This API allows authenticated users to send messages and enables admins to view and manage messages from users.
 
-🚀 Features
-✅ Users can send messages through a contact form (only logged-in users).
-✅ Messages include name, email, message.
-✅ Admins can view all messages from users.
-✅ Uses MongoDB for storing messages.
-✅ Secure authentication using NextAuth.js.
+## 🚀 Features
 
-**✅ User Sends a Message**
-User logs in and fills out the contact form.
-Message is stored in the database.
-**✅ Admin Views Messages**
-Admin logs into the Dashboard (/dashboard/messages).
-Admin sees all messages and user details.
+- ✅ Users can send messages through a contact form (only logged-in users).
+- ✅ Messages include name, email, message.
+- ✅ Admins can view all messages from users.
+- ✅ Uses MongoDB for storing messages.
+- ✅ Secure authentication using NextAuth.js.
+
+## ✅ User Sends a Message
+
+- User logs in and fills out the contact form.
+- Message is stored in the database.
+
+## ✅ Admin Views Messages
+
+- Admin logs into the Dashboard (/dashboard/messages).
+- Admin sees all messages and user details.
 
 ## Tech Stack
 

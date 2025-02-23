@@ -16,26 +16,32 @@ router.post(
 
 router.get(
   '/',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   ProjectControllers.getAllProjects,
 );
 
 router.get(
-  '/:projectId',
+  '/my-projects',
   auth(USER_ROLE.user, USER_ROLE.admin),
+  ProjectControllers.getMyProjects,
+);
+
+router.get(
+  '/:projectId',
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   ProjectControllers.getSingleProject,
 );
 
 router.put(
   '/:projectId',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   validationRequest(ProjectValidation.updateProject),
   ProjectControllers.updateProject,
 );
 
 router.delete(
   '/:projectId',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   ProjectControllers.deleteProject,
 );
 

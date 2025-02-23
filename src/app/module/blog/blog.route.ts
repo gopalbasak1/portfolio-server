@@ -16,26 +16,26 @@ router.post(
 
 router.get(
   '/',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   BlogControllers.getAllBlogs,
 );
 
 router.get(
   '/:blogId',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   BlogControllers.getSingleBlog,
 );
 
 router.put(
   '/:blogId',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   validationRequest(BlogValidation.updateBlog),
   BlogControllers.updateBlog,
 );
 
 router.delete(
   '/:blogId',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  //auth(USER_ROLE.user, USER_ROLE.admin),
   BlogControllers.deleteBlog,
 );
 

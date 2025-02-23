@@ -9,7 +9,7 @@ const createUser = z.object({
       password: z
         .string()
         .min(6, 'Password must be at least 6 characters long'),
-      image: z.string().url().optional(),
+      image: z.string().optional(),
       isDeleted: z.boolean().default(true),
       status: z.enum(['active', 'blocked']).default('active'),
     }),

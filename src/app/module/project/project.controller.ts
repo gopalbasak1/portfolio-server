@@ -48,18 +48,25 @@ const getSingleProject = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getMyProjects = catchAsync(async (req, res) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+  const projects = await ProjectServices.getProjectsByUserFromDB(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User projects retrieved successfully',
+    data: projects,
+  });
+});
 
 const updateProject = catchAsync(async (req, res) => {
   const projectId = req.params.projectId;
-  const userEmail = req.user?.email;
-  const userRole = req.user?.role;
+
   const body = req.body;
-  const result = await ProjectServices.updateProjectIntoDB(
-    projectId,
-    body,
-    userEmail as string,
-    userRole as string,
-  );
+  const result = await ProjectServices.updateProjectIntoDB(projectId, body);
   //console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,13 +78,8 @@ const updateProject = catchAsync(async (req, res) => {
 
 const deleteProject = catchAsync(async (req, res) => {
   const projectId = req.params.projectId;
-  const userEmail = req.user?.email;
-  const userRole = req.user?.role;
-  const result = await ProjectServices.deleteProjectFromDB(
-    projectId,
-    userEmail as string,
-    userRole as string,
-  );
+
+  const result = await ProjectServices.deleteProjectFromDB(projectId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -93,4 +95,5 @@ export const ProjectControllers = {
   getSingleProject,
   updateProject,
   deleteProject,
+  getMyProjects,
 };

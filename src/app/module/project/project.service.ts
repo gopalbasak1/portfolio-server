@@ -30,24 +30,24 @@ const getSingleProjectIntoDB = async (id: string) => {
 const updateProjectIntoDB = async (
   id: string,
   data: Partial<TProject>,
-  userEmail: string,
-  userRole: string,
+  // userEmail: string,
+  // userRole: string,
 ) => {
   const project = await Project.findById(id);
   if (!project) {
     throw new AppError(httpStatus.NOT_FOUND, 'Project not found');
   }
 
-  // Get the project creator
-  const projectOwner = await User.findById(project?.user);
+  // // Get the project creator
+  // const projectOwner = await User.findById(project?.user);
 
-  // Only allow the creator or admin to update
-  if (projectOwner?.email !== userEmail && userRole !== 'admin') {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      'You do not have permission to update this project',
-    );
-  }
+  // // Only allow the creator or admin to update
+  // if (projectOwner?.email !== userEmail && userRole !== 'admin') {
+  //   throw new AppError(
+  //     httpStatus.FORBIDDEN,
+  //     'You do not have permission to update this project',
+  //   );
+  // }
 
   const result = await Project.findByIdAndUpdate(id, data, {
     new: true,
@@ -56,31 +56,19 @@ const updateProjectIntoDB = async (
   return result;
 };
 
-const deleteProjectFromDB = async (
-  id: string,
-  userEmail: string,
-  userRole: string,
-) => {
+const deleteProjectFromDB = async (id: string) => {
   const project = await Project.findById(id);
   if (!project) {
     throw new AppError(httpStatus.NOT_FOUND, 'Project not found');
   }
 
-  const projectOwner = await User.findById(project?.user);
-
-  if (!projectOwner) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Project owner not found');
-  }
-  // Only allow the creator or admin to delete
-  if (projectOwner?.email !== userEmail && userRole !== 'admin') {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      'You do not have permission to delete this project',
-    );
-  }
-
   const result = await Project.findByIdAndDelete(id);
 
+  return result;
+};
+
+const getProjectsByUserFromDB = async (userId: string) => {
+  const result = await Project.find({ user: userId });
   return result;
 };
 
@@ -90,4 +78,5 @@ export const ProjectServices = {
   getSingleProjectIntoDB,
   updateProjectIntoDB,
   deleteProjectFromDB,
+  getProjectsByUserFromDB,
 };

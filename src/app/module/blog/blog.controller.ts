@@ -49,14 +49,14 @@ const getSingleBlog = catchAsync(async (req, res) => {
 const updateBlog = catchAsync(async (req, res) => {
   const blogId = req.params.blogId;
 
-  const userEmail = req.user?.email;
-  const userRole = req.user?.role;
+  // const userEmail = req.user?.email;
+  // const userRole = req.user?.role;
   const body = req.body;
   const result = await BlogServices.updateBlogIntoDB(
     blogId,
     body,
-    userEmail as string,
-    userRole as string,
+    // userEmail as string,
+    // userRole as string,
   );
 
   sendResponse(res, {
@@ -69,12 +69,12 @@ const updateBlog = catchAsync(async (req, res) => {
 
 const deleteBlog = catchAsync(async (req, res) => {
   const blogId = req.params.blogId;
-  const userEmail = req.user?.email;
-  const userRole = req.user?.role;
+  // const userEmail = req.user?.email;
+  // const userRole = req.user?.role;
   const result = await BlogServices.deleteBlogFromDB(
     blogId,
-    userEmail as string,
-    userRole as string,
+    // userEmail as string,
+    // userRole as string,
   );
 
   sendResponse(res, {
