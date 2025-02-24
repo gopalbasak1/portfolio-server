@@ -18,12 +18,12 @@ const createProjectFromDB = async (email: string, payload: TProject) => {
 };
 
 const getAllProjectIntoDB = async () => {
-  const result = await Project.find();
+  const result = await Project.find().populate('user');
   return result;
 };
 
 const getSingleProjectIntoDB = async (id: string) => {
-  const result = await Project.findById(id);
+  const result = await Project.findById(id).populate('user');
   return result;
 };
 

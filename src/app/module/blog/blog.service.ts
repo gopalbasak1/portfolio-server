@@ -18,12 +18,12 @@ const createBlogFromDB = async (email: string, payload: TBlog) => {
 };
 
 const getAllBlogIntoDB = async () => {
-  const result = await Blog.find();
+  const result = await Blog.find().populate('user');
   return result;
 };
 
 const getSingleBlogIntoDB = async (id: string) => {
-  const result = await Blog.findById(id);
+  const result = await Blog.findById(id).populate('user');
   return result;
 };
 

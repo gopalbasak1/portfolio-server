@@ -14,6 +14,6 @@ router.post(
   MessageControllers.createMessage,
 );
 
-router.get('/', auth(USER_ROLE.admin), MessageControllers.getAllMessage);
+router.get('/', MessageControllers.getAllMessage);
 
 export const MessageRouter = router;

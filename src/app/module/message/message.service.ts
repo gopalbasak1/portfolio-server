@@ -33,7 +33,7 @@ const createMessageIntoDB = async (
 };
 
 const getMessageIntoDB = async () => {
-  const result = await Message.find();
+  const result = await Message.find().populate('user');
   return result;
 };
 
