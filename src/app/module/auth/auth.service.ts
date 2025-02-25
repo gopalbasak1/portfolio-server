@@ -71,7 +71,7 @@ const loginIntoDB = async (payload: TLoginUser) => {
     role: user?.role,
     id: user?._id,
   };
-  console.log(userInfo);
+  //console.log(userInfo);
   const result = {
     accessToken,
     refreshToken,
