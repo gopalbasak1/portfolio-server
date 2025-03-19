@@ -6,7 +6,10 @@ export type TUser = {
   name: string;
   role: 'admin' | 'user';
   email: string;
-  image?: string;
+  phoneNumber: string;
+  imageUrls?: string[];
+  needsPasswordChange: boolean;
+  passwordChangedAt?: Date;
   password: string;
   status: 'active' | 'blocked';
   isDeleted: boolean;
@@ -17,5 +20,10 @@ export interface UserModel extends Model<TUser> {
     plainTextPassword: string,
     hashedPassword: string,
   ): Promise<boolean>;
+
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number,
+  ): boolean;
 }
 export type TUserRole = keyof typeof USER_ROLE;

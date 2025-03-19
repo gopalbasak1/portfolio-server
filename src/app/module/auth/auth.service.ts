@@ -8,6 +8,7 @@ import { TLoginUser } from './auth.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './auth.utils';
+import { JwtPayload } from 'jsonwebtoken';
 
 const registerFromDB = async (password: string, payload: TUser) => {
   const result = await User.create(payload);
@@ -49,7 +50,9 @@ const loginIntoDB = async (payload: TLoginUser) => {
 
   const jwtPayload = {
     email: user?.email,
-    image: user?.image,
+    imageUrls: user?.imageUrls,
+    phoneNumber: user?.phoneNumber,
+    status: user?.status,
     role: user?.role,
     name: user?.name,
   };
@@ -64,18 +67,20 @@ const loginIntoDB = async (payload: TLoginUser) => {
     config.JWT_REFRESH_SECRET as string,
     config.JWT_REFRESH_EXPIRES_IN as string,
   );
-  const userInfo = {
-    name: user?.name,
-    email: user?.email,
-    image: user?.image,
-    role: user?.role,
-    id: user?._id,
-  };
+  // const userInfo = {
+  //   name: user?.name,
+  //   phoneNumber: user?.phoneNumber,
+  //   email: user?.email,
+  //   imageUrls: user?.imageUrls,
+  //   role: user?.role,
+  //   userId: user?._id,
+  //   status: user?.status,
+  // };
   //console.log(userInfo);
   const result = {
     accessToken,
     refreshToken,
-    userInfo,
+    needsPasswordChange: user?.needsPasswordChange,
   };
   //console.log(result);
   return result;
@@ -110,7 +115,8 @@ const refreshToken = async (token: string) => {
   const jwtPayload = {
     email: user?.email,
     role: user?.role,
-    image: user.image,
+    imageUrls: user?.imageUrls,
+    phoneNumber: user?.phoneNumber,
   };
 
   const accessToken = createToken(
@@ -124,8 +130,68 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const changePasswordIntoDB = async (
+  userData: JwtPayload | undefined,
+  payload: { oldPassword: string; newPassword: string },
+) => {
+  if (!userData) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authenticated');
+  }
+
+  let query = {};
+
+  if (userData?.email) {
+    query = { email: userData?.email };
+  } else {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Email is required');
+  }
+
+  const user = await User.findOne(query).select('+password');
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (user.status === 'blocked') {
+    throw new AppError(httpStatus.BAD_REQUEST, 'This user is blocked.');
+  }
+
+  if (!user.password) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Password not found for user.');
+  }
+
+  const isMatch = await bcrypt.compare(payload.oldPassword, user.password);
+  if (!isMatch) {
+    throw new AppError(httpStatus.CONFLICT, ' Old password is incorrect.');
+  }
+
+  const saltRounds = Number(config.BCRYPT_SALT_ROUNDS) || 8;
+
+  const newHashedPassword = await bcrypt.hash(payload.newPassword, saltRounds);
+
+  const updateUser = await User.findOneAndUpdate(
+    query,
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+    {
+      new: true,
+    },
+  );
+
+  if (!updateUser) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Password update failed',
+    );
+  }
+};
+
 export const AuthServices = {
   registerFromDB,
   loginIntoDB,
   refreshToken,
+  changePasswordIntoDB,
 };

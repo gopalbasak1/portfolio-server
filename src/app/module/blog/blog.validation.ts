@@ -9,7 +9,6 @@ const createBlog = z.object({
       })
       .min(10, { message: 'Content must be at least 10 characters' }),
 
-    image: z.string(),
     category: z.string({ required_error: 'Category is required' }),
   }),
 });
@@ -24,7 +23,6 @@ const updateBlog = z.object({
       .min(10, { message: 'Content must be at least 10 characters' })
       .optional(),
 
-    image: z.string().optional(),
     category: z.string({ required_error: 'Category is required' }).optional(),
   }),
 });

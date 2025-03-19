@@ -6,7 +6,7 @@ export type TProject = {
   stack: { name: string }[]; // now an array of objects with a 'name' property
   github: string;
   description: string;
-  image?: string;
+  imageUrls?: string[];
   liveLink?: string;
   user?: string | Types.ObjectId;
 };

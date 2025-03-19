@@ -30,8 +30,9 @@ const projectSchema = new Schema<TProject>(
       type: String,
       required: true,
     },
-    image: {
-      type: String,
+    imageUrls: {
+      type: [String],
+      default: [],
     },
     liveLink: {
       type: String,

@@ -4,8 +4,11 @@ export const createToken = (
   jwtPayload: {
     email: string;
     role: string;
-    image?: string | undefined;
+    phoneNumber?: string;
+    imageUrls?: string[] | undefined;
     name?: string;
+    userId?: object;
+    status?: string;
   },
   secret: string,
   expiresIn: string | number, // Ensure this can be a string or a number

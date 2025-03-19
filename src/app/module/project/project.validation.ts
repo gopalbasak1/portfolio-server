@@ -17,7 +17,6 @@ const createProject = z.object({
       })
       .min(10, { message: 'Description must be at least 10 characters' }),
 
-    image: z.string(),
     liveLink: z.string(),
     category: z.enum(categories, { required_error: 'Category is required' }),
     stack: z
@@ -41,7 +40,6 @@ const updateProject = z.object({
       .min(10, { message: 'Description must be at least 10 characters' })
       .optional(),
 
-    image: z.string().optional(),
     liveLink: z.string().optional(),
     category: z
       .enum(categories, { required_error: 'Category is required' })

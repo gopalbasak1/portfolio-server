@@ -15,8 +15,9 @@ const blogSchema = new Schema<TBlog>(
       type: String,
       required: true,
     },
-    image: {
-      type: String,
+    imageUrls: {
+      type: [String],
+      default: [],
     },
     category: {
       type: String,

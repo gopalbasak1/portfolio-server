@@ -23,13 +23,26 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
       unique: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
       select: 0,
     },
-    image: {
-      type: String,
+    imageUrls: {
+      type: [String],
+      default: [],
+    },
+    needsPasswordChange: {
+      type: Boolean,
+      default: true,
+    },
+    passwordChangedAt: {
+      type: Date,
     },
     isDeleted: {
       type: Boolean,
@@ -77,5 +90,14 @@ userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
+
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 100;
+  return passwordChangedTime > jwtIssuedTimestamp;
+};
 
 export const User = model<TUser, UserModel>('User', userSchema);

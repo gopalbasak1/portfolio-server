@@ -11,7 +11,7 @@ type TResponse<T> = {
   statusCode: number;
   success: boolean;
   message?: string;
-  meta?: TMeta;
+  meta?: TMeta | undefined;
   data: T | T[] | null;
   token?: string;
 };

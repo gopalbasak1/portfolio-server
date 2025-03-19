@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -19,14 +21,15 @@ const createBlog = catchAsync(async (req, res) => {
 });
 
 const getAllBlogs = catchAsync(async (req, res) => {
-  const result = await BlogServices.getAllBlogIntoDB();
+  const result = await BlogServices.getAllBlogIntoDB(req.query);
 
   //res status
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: 'All Blog are retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
@@ -49,14 +52,14 @@ const getSingleBlog = catchAsync(async (req, res) => {
 const updateBlog = catchAsync(async (req, res) => {
   const blogId = req.params.blogId;
 
-  // const userEmail = req.user?.email;
-  // const userRole = req.user?.role;
+  const userEmail = req.user?.email;
+  const userRole = req.user?.role;
   const body = req.body;
   const result = await BlogServices.updateBlogIntoDB(
     blogId,
     body,
-    // userEmail as string,
-    // userRole as string,
+    userEmail as string,
+    userRole as string,
   );
 
   sendResponse(res, {
@@ -69,19 +72,19 @@ const updateBlog = catchAsync(async (req, res) => {
 
 const deleteBlog = catchAsync(async (req, res) => {
   const blogId = req.params.blogId;
-  // const userEmail = req.user?.email;
-  // const userRole = req.user?.role;
+  const userEmail = req.user?.email;
+  const userRole = req.user?.role;
   const result = await BlogServices.deleteBlogFromDB(
     blogId,
-    // userEmail as string,
-    // userRole as string,
+    userEmail as string,
+    userRole as string,
   );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Blog is deleted',
-    data: result,
+    data: {},
   });
 });
 

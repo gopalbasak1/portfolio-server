@@ -3,10 +3,24 @@
 import httpStatus from 'http-status-codes';
 import { User } from './user.model';
 import AppError from '../../errors/AppError';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { userSearchableFields } from './user.constant';
+import { TUser } from './user.interface';
 
-const getAllUsersFromDB = async () => {
-  const result = User.find();
-  return result;
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(User.find(), query)
+    .search(userSearchableFields)
+    .fields()
+    .filter()
+    .sort()
+    .paginate();
+  const result = await userQuery.modelQuery;
+  const meta = await userQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleUserIntoDB = async (id: string) => {
@@ -33,8 +47,45 @@ const getMe = async (userId: string, role: string) => {
   return result;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updatedUserIntoDB = async (id: string, data: Partial<TUser | any>) => {
+  const existingUser = await User.findById(id);
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const updateData = data.user ? { ...data.user } : { ...data };
+
+  const isEmailChanged =
+    updateData.email && updateData.email !== existingUser.email;
+
+  const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  return {
+    updatedUser,
+    shouldLogout: isEmailChanged,
+  };
+};
+
+const deleteUserIntoDB = async (userId: string) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const result = await User.findByIdAndDelete(userId);
+
+  return result;
+};
+
 export const UserServices = {
   getAllUsersFromDB,
   getSingleUserIntoDB,
   getMe,
+  updatedUserIntoDB,
+  deleteUserIntoDB,
 };

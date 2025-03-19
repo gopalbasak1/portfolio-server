@@ -3,12 +3,18 @@ import { User } from '../user/user.model';
 import { TProject } from './project.interface';
 import httpStatus from 'http-status-codes';
 import Project from './project.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { projectSearchableFields } from './project.constant';
 
 const createProjectFromDB = async (email: string, payload: TProject) => {
   const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (user.role !== 'admin') {
+    throw new AppError(httpStatus.FORBIDDEN, 'Only admin can post the project');
   }
   // 🔹 Attach user ID to payload
   payload.user = user._id;
@@ -17,9 +23,15 @@ const createProjectFromDB = async (email: string, payload: TProject) => {
   return result;
 };
 
-const getAllProjectIntoDB = async () => {
-  const result = await Project.find().populate('user');
-  return result;
+const getAllProjectIntoDB = async (query: Record<string, unknown>) => {
+  const projectQuery = new QueryBuilder(Project.find().populate('user'), query);
+  const result = await projectQuery.modelQuery;
+  const meta = await projectQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleProjectIntoDB = async (id: string) => {
@@ -67,9 +79,22 @@ const deleteProjectFromDB = async (id: string) => {
   return result;
 };
 
-const getProjectsByUserFromDB = async (userId: string) => {
-  const result = await Project.find({ user: userId });
-  return result;
+const getProjectsByUserFromDB = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const myProjectQuery = new QueryBuilder(Project.find({ user: userId }), query)
+    .search(projectSearchableFields)
+    .filter()
+    .paginate();
+
+  const result = await myProjectQuery.modelQuery;
+  const meta = await myProjectQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
 };
 
 export const ProjectServices = {

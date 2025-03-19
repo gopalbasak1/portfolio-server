@@ -65,8 +65,9 @@ export const auth = (...requiredRoles: TUserRole[]) => {
       id: user._id.toString(),
       role: user.role as 'admin' | 'user',
       email: user.email,
-      image: user.image,
+      imageUrls: user.imageUrls,
       name: user.name,
+      phoneNumber: user.phoneNumber,
     };
 
     //console.log('Authenticated User:', req.user);

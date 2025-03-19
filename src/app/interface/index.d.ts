@@ -7,6 +7,7 @@ declare global {
         id: string;
         role: 'admin' | 'user';
         email?: string;
+        phoneNumber?: string;
       };
     }
   }

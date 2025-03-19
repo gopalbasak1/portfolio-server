@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -22,14 +24,15 @@ const createProject = catchAsync(async (req, res) => {
 });
 
 const getAllProjects = catchAsync(async (req, res) => {
-  const result = await ProjectServices.getAllProjectIntoDB();
+  const result = await ProjectServices.getAllProjectIntoDB(req.query);
 
   //res status
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: 'All Project are retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
@@ -48,17 +51,22 @@ const getSingleProject = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 const getMyProjects = catchAsync(async (req, res) => {
   const userId = req.user?.id;
   if (!userId) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
   }
-  const projects = await ProjectServices.getProjectsByUserFromDB(userId);
+  const result = await ProjectServices.getProjectsByUserFromDB(
+    userId,
+    req.query,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User projects retrieved successfully',
-    data: projects,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
@@ -85,7 +93,7 @@ const deleteProject = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Project is deleted',
-    data: result,
+    data: {},
   });
 });
 
