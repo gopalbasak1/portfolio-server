@@ -14,9 +14,13 @@ router.post(
   BlogControllers.createBlog,
 );
 
-router.get('/', auth(USER_ROLE.admin), BlogControllers.getAllBlogs);
+router.get('/', BlogControllers.getAllBlogs);
 
-router.get('/:blogId', auth(USER_ROLE.admin), BlogControllers.getSingleBlog);
+router.get(
+  '/:blogId',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  BlogControllers.getSingleBlog,
+);
 
 router.put(
   '/:blogId',

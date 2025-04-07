@@ -15,6 +15,10 @@ const messageSchema = new Schema<TMessage>(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     message: {
       type: String,
       required: true,
