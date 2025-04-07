@@ -26,7 +26,12 @@ const createSkillFromDB = async (email: string, payload: TSkills) => {
 };
 
 const getAllSkillIntoDB = async (query: Record<string, unknown>) => {
-  const skillQuery = new QueryBuilder(Skill.find().populate('user'), query);
+  const skillQuery = new QueryBuilder(Skill.find().populate('user'), query)
+    .search(skillSearchableFields)
+    .filter()
+    .paginate()
+    .sort()
+    .fields();
   const result = await skillQuery.modelQuery;
   const meta = await skillQuery.countTotal();
 
@@ -81,23 +86,23 @@ const deleteSkillFromDB = async (id: string) => {
   return result;
 };
 
-const getSkillsByUserFromDB = async (
-  userId: string,
-  query: Record<string, unknown>,
-) => {
-  const mySkillQuery = new QueryBuilder(Skill.find({ user: userId }), query)
-    .search(skillSearchableFields)
-    .filter()
-    .paginate();
+// const getSkillsByUserFromDB = async (
+//   userId: string,
+//   query: Record<string, unknown>,
+// ) => {
+//   const mySkillQuery = new QueryBuilder(Skill.find({ user: userId }), query)
+//     .search(skillSearchableFields)
+//     .filter()
+//     .paginate();
 
-  const result = await mySkillQuery.modelQuery;
-  const meta = await mySkillQuery.countTotal();
+//   const result = await mySkillQuery.modelQuery;
+//   const meta = await mySkillQuery.countTotal();
 
-  return {
-    meta,
-    result,
-  };
-};
+//   return {
+//     meta,
+//     result,
+//   };
+// };
 
 export const SkillServices = {
   createSkillFromDB,

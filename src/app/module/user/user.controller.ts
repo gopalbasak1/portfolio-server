@@ -6,7 +6,7 @@ import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
 const getAllUsers = catchAsync(async (req, res) => {
-  console.log('Query Params:', req.query); // Log the query
+  //console.log('Query Params:', req.query); // Log the query
   const result = await UserServices.getAllUsersFromDB(req.query);
 
   sendResponse(res, {
